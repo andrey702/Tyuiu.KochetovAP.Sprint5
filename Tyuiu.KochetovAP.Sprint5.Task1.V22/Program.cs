@@ -26,24 +26,24 @@ namespace Tyuiu.KochetovAP.Sprint5.Task1.V22
             Console.WriteLine("***************************************************************************");
 
             DataService ds = new DataService();
-
             int start = -5;
             int stop = 5;
 
-            
             string filePath = ds.SaveToFileTextData(start, stop);
+            string[] results = File.ReadAllLines(filePath);
 
-            
-            string[] lines = File.ReadAllLines(filePath);
-            Console.WriteLine("   x\t  F(x)");
-            Console.WriteLine(" ----------------------");
-            foreach (var line in lines)
+            Console.WriteLine("   x\t   F(x)");
+            Console.WriteLine("-----------------------");
+
+            int x = start;
+            foreach (var line in results)
             {
-                Console.WriteLine("  " + line);
+                Console.WriteLine($"{x,4}\t{line}");
+                x++;
             }
 
             Console.WriteLine("***************************************************************************");
-            Console.WriteLine($" Файл с результатом: {filePath}");
+            Console.WriteLine($" Файл сохранён: {filePath}");
             Console.WriteLine(" Программа завершена. Нажмите любую клавишу для выхода.");
             Console.WriteLine("***************************************************************************");
             Console.ReadKey();

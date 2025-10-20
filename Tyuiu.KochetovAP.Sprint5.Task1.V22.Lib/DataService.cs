@@ -24,7 +24,10 @@ namespace Tyuiu.KochetovAP.Sprint5.Task1.V22.Lib
                     }
 
                     y = Math.Round(y, 2);
-                    writer.WriteLine($"{x}; {y}");
+
+                    
+                    writer.WriteLine(y.ToString().Replace(",", ".").Replace('.', ','));
+                    
                 }
             }
 
