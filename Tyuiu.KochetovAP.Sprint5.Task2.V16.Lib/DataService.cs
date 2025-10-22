@@ -6,6 +6,7 @@ namespace Tyuiu.KochetovAP.Sprint5.Task2.V16.Lib
     {
         public string SaveToFileTextData(int[,] matrix)
         {
+
             
             for (int i = 0; i < matrix.GetLength(0); i++)
             {
@@ -21,17 +22,19 @@ namespace Tyuiu.KochetovAP.Sprint5.Task2.V16.Lib
             
             string path = Path.Combine(Path.GetTempPath(), "OutPutFileTask2.csv");
 
-           
+            
             using (StreamWriter sw = new StreamWriter(path))
             {
                 for (int i = 0; i < matrix.GetLength(0); i++)
                 {
-                    string line = $"{matrix[i, 0]}; {matrix[i, 1]}; {matrix[i, 2]}";
+                    string line = $"{matrix[i, 0]};{matrix[i, 1]};{matrix[i, 2]}";
                     sw.WriteLine(line);
                 }
             }
 
-            return path; 
+            return path;
         }
+
     }
+    
 }
