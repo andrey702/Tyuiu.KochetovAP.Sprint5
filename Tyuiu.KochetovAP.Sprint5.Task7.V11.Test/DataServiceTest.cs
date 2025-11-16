@@ -39,7 +39,7 @@ namespace Tyuiu.KochetovAP.Sprint5.Task7.V11.Test
             string resultPath = ds.LoadDataAndSave(inputPath);
             string result = File.ReadAllText(resultPath, Encoding.UTF8);
 
-            string expected = "П,?О.О.";
+            string expected = "П,? О. О .";
             Assert.AreEqual(expected, result);
         }
 
@@ -54,6 +54,20 @@ namespace Tyuiu.KochetovAP.Sprint5.Task7.V11.Test
             string result = File.ReadAllText(resultPath, Encoding.UTF8);
 
             Assert.AreEqual("ТЕСТ123", result);
+        }
+
+        [TestMethod]
+        public void CheckPunctuationSpaces()
+        {
+            DataService ds = new DataService();
+            string inputPath = Path.Combine(testFolderPath!, "InPutDataFileTask7V11.txt");
+            File.WriteAllText(inputPath, "Привет? Как дела. Все хорошо!", Encoding.UTF8);
+
+            string resultPath = ds.LoadDataAndSave(inputPath);
+            string result = File.ReadAllText(resultPath, Encoding.UTF8);
+
+            string expected = "П? К. !";
+            Assert.AreEqual(expected, result);
         }
 
         [TestMethod]
