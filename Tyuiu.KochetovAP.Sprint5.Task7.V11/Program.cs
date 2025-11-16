@@ -24,18 +24,25 @@ namespace Tyuiu.KochetovAP.Sprint5.Task7.V11
             Console.WriteLine("* ИСХОДНЫЕ ДАННЫЕ:                                                        *");
             Console.WriteLine("***************************************************************************");
 
-            string path = @"C:\Users\Asus\source\repos\Tyuiu.KochetovAP.Sprint5\Sprint5Task7\InPutDataFileTask7V11.txt";
+            string path = @"C:\DataSprint5\InPutDataFileTask7V11.txt";
             Console.WriteLine("Данные находятся в файле: " + path);
 
             Console.WriteLine("***************************************************************************");
             Console.WriteLine("* РЕЗУЛЬТАТ:                                                              *");
             Console.WriteLine("***************************************************************************");
 
-            string result = ds.LoadDataAndSave(path);
-            Console.WriteLine("Результат сохранен в файле: " + result);
+            try
+            {
+                string result = ds.LoadDataAndSave(path);
+                Console.WriteLine("Результат сохранен в файле: " + result);
 
-            string resultContent = System.IO.File.ReadAllText(result);
-            Console.WriteLine("Обработанный текст: " + resultContent);
+                string resultContent = System.IO.File.ReadAllText(result);
+                Console.WriteLine("Обработанный текст: " + resultContent);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Ошибка: " + ex.Message);
+            }
 
             Console.ReadKey();
         }

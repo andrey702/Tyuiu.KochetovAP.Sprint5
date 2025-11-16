@@ -9,13 +9,13 @@ namespace Tyuiu.KochetovAP.Sprint5.Task7.V11.Test
     [TestClass]
     public class DataServiceTest
     {
-        private string testFolderPath;
+        private string? testFolderPath;
 
         [TestInitialize]
         public void Initialize()
         {
             testFolderPath = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
-            Directory.CreateDirectory(testFolderPath);
+            Directory.CreateDirectory(testFolderPath!);
         }
 
         [TestCleanup]
@@ -31,7 +31,7 @@ namespace Tyuiu.KochetovAP.Sprint5.Task7.V11.Test
         public void ValidLoadDataAndSave()
         {
             DataService ds = new DataService();
-            string inputPath = Path.Combine(testFolderPath, "InPutDataFileTask7V11.txt");
+            string inputPath = Path.Combine(testFolderPath!, "InPutDataFileTask7V11.txt");
             string testText = "Привет, как дела? Он написал письмо. Он ссорился с другом вчера.";
 
             File.WriteAllText(inputPath, testText, Encoding.UTF8);
@@ -47,7 +47,7 @@ namespace Tyuiu.KochetovAP.Sprint5.Task7.V11.Test
         public void CheckOnlySpacesAndLowercaseRemoval()
         {
             DataService ds = new DataService();
-            string inputPath = Path.Combine(testFolderPath, "InPutDataFileTask7V11.txt");
+            string inputPath = Path.Combine(testFolderPath!, "InPutDataFileTask7V11.txt");
             File.WriteAllText(inputPath, "тест ТЕСТ 123", Encoding.UTF8);
 
             string resultPath = ds.LoadDataAndSave(inputPath);
@@ -61,8 +61,7 @@ namespace Tyuiu.KochetovAP.Sprint5.Task7.V11.Test
         public void CheckFileNotFoundException()
         {
             DataService ds = new DataService();
-            string nonExistentPath = Path.Combine(testFolderPath, "nonexistent_file.txt");
-
+            string nonExistentPath = Path.Combine(testFolderPath!, "nonexistent_file.txt");
             ds.LoadDataAndSave(nonExistentPath);
         }
     }

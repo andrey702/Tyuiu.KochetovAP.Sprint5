@@ -17,8 +17,7 @@ namespace Tyuiu.KochetovAP.Sprint5.Task7.V11.Lib
             string fileContent = File.ReadAllText(path, Encoding.UTF8);
             string processedContent = RemoveSpacesAndLowercaseRussianLetters(fileContent);
 
-            string directory = Path.GetDirectoryName(path);
-            string outputPath = Path.Combine(directory, "OutPutDataFileTask7V11.txt");
+            string outputPath = Path.Combine(Path.GetTempPath(), "OutPutDataFileTask7V11.txt");
 
             File.WriteAllText(outputPath, processedContent, Encoding.UTF8);
             return outputPath;
