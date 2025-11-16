@@ -25,10 +25,12 @@ namespace Tyuiu.KochetovAP.Sprint5.Task7.V11.Lib
 
         private string RemoveSpacesAndLowercaseRussianLetters(string text)
         {
-            // Сначала удаляем строчные русские буквы
             string withoutLowercase = Regex.Replace(text, "[а-я]", "");
 
-            string result = Regex.Replace(withoutLowercase, @"(?<![?.])\s+", "");
+            string result = withoutLowercase
+                .Replace(" ", "")    
+                .Replace("?", "? ")  
+                .Replace(".", ". "); 
 
             return result;
         }

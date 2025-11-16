@@ -71,6 +71,20 @@ namespace Tyuiu.KochetovAP.Sprint5.Task7.V11.Test
         }
 
         [TestMethod]
+        public void CheckMultipleSentences()
+        {
+            DataService ds = new DataService();
+            string inputPath = Path.Combine(testFolderPath!, "InPutDataFileTask7V11.txt");
+            File.WriteAllText(inputPath, "Первое предложение. Второе. Третье.", Encoding.UTF8);
+
+            string resultPath = ds.LoadDataAndSave(inputPath);
+            string result = File.ReadAllText(resultPath, Encoding.UTF8);
+
+            string expected = "П. В. Т. ";
+            Assert.AreEqual(expected, result);
+        }
+
+        [TestMethod]
         [ExpectedException(typeof(FileNotFoundException))]
         public void CheckFileNotFoundException()
         {
