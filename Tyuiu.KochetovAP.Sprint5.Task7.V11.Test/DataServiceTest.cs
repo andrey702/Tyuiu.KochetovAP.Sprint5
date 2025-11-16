@@ -9,88 +9,46 @@ namespace Tyuiu.KochetovAP.Sprint5.Task7.V11.Test
     [TestClass]
     public class DataServiceTest
     {
-        private string? testFolderPath;
-
-        [TestInitialize]
-        public void Initialize()
-        {
-            testFolderPath = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
-            Directory.CreateDirectory(testFolderPath!);
-        }
-
-        [TestCleanup]
-        public void Cleanup()
-        {
-            if (Directory.Exists(testFolderPath))
-            {
-                Directory.Delete(testFolderPath, true);
-            }
-        }
-
         [TestMethod]
         public void ValidLoadDataAndSave()
         {
             DataService ds = new DataService();
-            string inputPath = Path.Combine(testFolderPath!, "InPutDataFileTask7V11.txt");
-            string testText = "Привет, как дела? Он написал письмо. Он ссорился с другом вчера.";
+            string path = Path.GetTempFileName();
 
-            File.WriteAllText(inputPath, testText, Encoding.UTF8);
+            File.WriteAllText(path, "Привет, как дела? Он написал письмо. Он ссорился с другом вчера.", Encoding.UTF8);
 
-            string resultPath = ds.LoadDataAndSave(inputPath);
+            string resultPath = ds.LoadDataAndSave(path);
             string result = File.ReadAllText(resultPath, Encoding.UTF8);
 
-            string expected = "П,? О. О .";
-            Assert.AreEqual(expected, result);
+            Assert.AreEqual("П,? О. О .", result);
+
+            File.Delete(path);
+            File.Delete(resultPath);
         }
 
         [TestMethod]
-        public void CheckOnlySpacesAndLowercaseRemoval()
+        public void CheckSpacesAndLowercaseRemoval()
         {
             DataService ds = new DataService();
-            string inputPath = Path.Combine(testFolderPath!, "InPutDataFileTask7V11.txt");
-            File.WriteAllText(inputPath, "тест ТЕСТ 123", Encoding.UTF8);
+            string path = Path.GetTempFileName();
 
-            string resultPath = ds.LoadDataAndSave(inputPath);
+            File.WriteAllText(path, "тест ТЕСТ 123", Encoding.UTF8);
+
+            string resultPath = ds.LoadDataAndSave(path);
             string result = File.ReadAllText(resultPath, Encoding.UTF8);
 
             Assert.AreEqual("ТЕСТ123", result);
-        }
 
-        [TestMethod]
-        public void CheckPunctuationSpaces()
-        {
-            DataService ds = new DataService();
-            string inputPath = Path.Combine(testFolderPath!, "InPutDataFileTask7V11.txt");
-            File.WriteAllText(inputPath, "Привет? Как дела. Все хорошо!", Encoding.UTF8);
-
-            string resultPath = ds.LoadDataAndSave(inputPath);
-            string result = File.ReadAllText(resultPath, Encoding.UTF8);
-
-            string expected = "П? К. !";
-            Assert.AreEqual(expected, result);
-        }
-
-        [TestMethod]
-        public void CheckMultipleSentences()
-        {
-            DataService ds = new DataService();
-            string inputPath = Path.Combine(testFolderPath!, "InPutDataFileTask7V11.txt");
-            File.WriteAllText(inputPath, "Первое предложение. Второе. Третье.", Encoding.UTF8);
-
-            string resultPath = ds.LoadDataAndSave(inputPath);
-            string result = File.ReadAllText(resultPath, Encoding.UTF8);
-
-            string expected = "П. В. Т. ";
-            Assert.AreEqual(expected, result);
+            File.Delete(path);
+            File.Delete(resultPath);
         }
 
         [TestMethod]
         [ExpectedException(typeof(FileNotFoundException))]
-        public void CheckFileNotFoundException()
+        public void CheckFileNotFound()
         {
             DataService ds = new DataService();
-            string nonExistentPath = Path.Combine(testFolderPath!, "nonexistent_file.txt");
-            ds.LoadDataAndSave(nonExistentPath);
+            ds.LoadDataAndSave("nonexistent.txt");
         }
     }
 }

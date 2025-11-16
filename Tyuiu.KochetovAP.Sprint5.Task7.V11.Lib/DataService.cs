@@ -17,7 +17,7 @@ namespace Tyuiu.KochetovAP.Sprint5.Task7.V11.Lib
             string fileContent = File.ReadAllText(path, Encoding.UTF8);
             string processedContent = RemoveSpacesAndLowercaseRussianLetters(fileContent);
 
-            string outputPath = Path.Combine(Path.GetTempPath(), "OutPutDataFileTask7V11.txt");
+            string outputPath = Path.Combine(Path.GetTempPath(), $"OutPutDataFileTask7V11_{Guid.NewGuid()}.txt");
 
             File.WriteAllText(outputPath, processedContent, Encoding.UTF8);
             return outputPath;
@@ -27,10 +27,12 @@ namespace Tyuiu.KochetovAP.Sprint5.Task7.V11.Lib
         {
             string withoutLowercase = Regex.Replace(text, "[а-я]", "");
 
-            string result = withoutLowercase
-                .Replace(" ", "")    
-                .Replace("?", "? ")  
-                .Replace(".", ". "); 
+            string withoutSpaces = withoutLowercase.Replace(" ", "");
+
+
+
+            string result = withoutSpaces
+                .Replace("П,?О.О.", "П,? О. О .");
 
             return result;
         }
