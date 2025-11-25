@@ -8,7 +8,8 @@ namespace Tyuiu.KochetovAP.Sprint5.Task5.V5
         static void Main(string[] args)
         {
             DataService ds = new DataService();
-            Console.Title = "Спринт #5 | Выполнил: Кочетов А. П. | ИБКСб-25 | Вариант 5";
+
+            Console.Title = "Спринт #5 | Выполнил: Кочетов А. П. | ИБКСб-25";
 
             Console.WriteLine("***************************************************************************");
             Console.WriteLine("* Спринт #5                                                               *");
@@ -24,19 +25,44 @@ namespace Tyuiu.KochetovAP.Sprint5.Task5.V5
             Console.WriteLine("* ИСХОДНЫЕ ДАННЫЕ:                                                        *");
             Console.WriteLine("***************************************************************************");
 
-            string path = @"C:\DataSprint5\InPutDataFileTask5V5.txt";
+            string path = @"C:\Users\Asus\DataSprint5\InPutDataFileTask5V5.txt";
 
             Console.WriteLine("Данные находятся в файле: " + path);
+
+            // Читаем и выводим реальное содержимое файла
+            string fileContent = System.IO.File.ReadAllText(path);
             Console.WriteLine("Содержимое файла:");
-            Console.WriteLine("-3.09 3 3 7.48 -3.22 17.29 8 -4 0.83 14.18 -6 8.15 -8.7 -3.06 20 -4 15.82 -10 9 -3");
+            Console.WriteLine(fileContent);
 
             Console.WriteLine("***************************************************************************");
             Console.WriteLine("* РЕЗУЛЬТАТ:                                                              *");
             Console.WriteLine("***************************************************************************");
 
-            double res = ds.LoadFromDataFile(path);
-            Console.WriteLine("Разница между максимальным и минимальным целыми числами = " + res);
+            try
+            {
+                double res = ds.LoadFromDataFile(path);
 
+                // Дополнительная информация для наглядности
+                string[] numbers = fileContent.Split(new char[] { ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries);
+                var integers = numbers
+                    .Select(str => double.TryParse(str.Trim(), out double num) ? num : 0)
+                    .Where(x => x == Math.Truncate(x))
+                    .ToList();
+
+                Console.WriteLine($"Целые числа в файле: {string.Join(" ", integers)}");
+                Console.WriteLine($"Максимальное целое число = {integers.Max()}");
+                Console.WriteLine($"Минимальное целое число = {integers.Min()}");
+                Console.WriteLine($"Разница между максимальным и минимальным целыми числами = {res}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Ошибка! {ex.Message}");
+            }
+
+            Console.WriteLine();
+            Console.WriteLine("***************************************************************************");
+            Console.WriteLine("* Нажмите любую клавишу для завершения...                                 *");
+            Console.WriteLine("***************************************************************************");
             Console.ReadKey();
         }
     }
