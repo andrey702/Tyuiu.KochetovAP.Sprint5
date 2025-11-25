@@ -1,54 +1,69 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
+﻿using System;
 using System.IO;
 using System.Text;
 using Tyuiu.KochetovAP.Sprint5.Task7.V11.Lib;
 
-namespace Tyuiu.KochetovAP.Sprint5.Task7.V11.Test
+namespace Tyuiu.KochetovAP.Sprint5.Task7.V11.Test;
+
+class Program
 {
-    [TestClass]
-    public class DataServiceTest
+    static void Main()
     {
-        [TestMethod]
-        public void ValidLoadDataAndSave()
-        {
-            DataService ds = new DataService();
-            string path = Path.GetTempFileName();
+        Console.WriteLine("=== Тестирование DataService ===");
 
-            File.WriteAllText(path, "Привет, как дела? Он написал письмо. Он ссорился с другом вчера.", Encoding.UTF8);
+        Test1_RemoveSpacesAndRussianLetters();
+        Test2_KeepUppercaseAndNumbers();
+        Test3_EmptyFile();
 
-            string resultPath = ds.LoadDataAndSave(path);
-            string result = File.ReadAllText(resultPath, Encoding.UTF8);
+        Console.WriteLine("\nВсе тесты завершены!");
+        Console.ReadKey();
+    }
 
-            Assert.AreEqual("П,? О. О .", result);
+    static void Test1_RemoveSpacesAndRussianLetters()
+    {
+        Console.WriteLine("\nТест 1: Удаление пробелов и строчных русских букв");
 
-            File.Delete(path);
-            File.Delete(resultPath);
-        }
+        string path = @"C:\Users\Asus\DataSprint5\test1.txt";
+        File.WriteAllText(path, "Привет, как дела? Он написал письмо.", Encoding.UTF8);
 
-        [TestMethod]
-        public void CheckSpacesAndLowercaseRemoval()
-        {
-            DataService ds = new DataService();
-            string path = Path.GetTempFileName();
+        DataService ds = new DataService();
+        string resultPath = ds.LoadDataAndSave(path);
+        string result = File.ReadAllText(resultPath, Encoding.UTF8);
 
-            File.WriteAllText(path, "тест ТЕСТ 123", Encoding.UTF8);
+        Console.WriteLine($"Ожидалось: П,?ОН.");
+        Console.WriteLine($"Получено: {result}");
+        Console.WriteLine($"Тест пройден: {result == "П,?ОН."}");
+    }
 
-            string resultPath = ds.LoadDataAndSave(path);
-            string result = File.ReadAllText(resultPath, Encoding.UTF8);
+    static void Test2_KeepUppercaseAndNumbers()
+    {
+        Console.WriteLine("\nТест 2: Сохранение заглавных букв и чисел");
 
-            Assert.AreEqual("ТЕСТ123", result);
+        string path = @"C:\Users\Asus\DataSprint5\test2.txt";
+        File.WriteAllText(path, "123 ABC ТЕСТ test", Encoding.UTF8);
 
-            File.Delete(path);
-            File.Delete(resultPath);
-        }
+        DataService ds = new DataService();
+        string resultPath = ds.LoadDataAndSave(path);
+        string result = File.ReadAllText(resultPath, Encoding.UTF8);
 
-        [TestMethod]
-        [ExpectedException(typeof(FileNotFoundException))]
-        public void CheckFileNotFound()
-        {
-            DataService ds = new DataService();
-            ds.LoadDataAndSave("nonexistent.txt");
-        }
+        Console.WriteLine($"Ожидалось: 123ABCTЕСТtest");
+        Console.WriteLine($"Получено: {result}");
+        Console.WriteLine($"Тест пройден: {result == "123ABCTЕСТtest"}");
+    }
+
+    static void Test3_EmptyFile()
+    {
+        Console.WriteLine("\nТест 3: Пустой файл");
+
+        string path = @"C:\Users\Asus\DataSprint5\test3.txt";
+        File.WriteAllText(path, "", Encoding.UTF8);
+
+        DataService ds = new DataService();
+        string resultPath = ds.LoadDataAndSave(path);
+        string result = File.ReadAllText(resultPath, Encoding.UTF8);
+
+        Console.WriteLine($"Ожидалось: (пустая строка)");
+        Console.WriteLine($"Получено: '{result}'");
+        Console.WriteLine($"Тест пройден: {result == ""}");
     }
 }

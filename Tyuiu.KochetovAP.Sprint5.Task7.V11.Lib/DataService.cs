@@ -1,6 +1,5 @@
 ﻿using System.IO;
 using System.Text;
-using System.Text.RegularExpressions;
 using tyuiu.cources.programming.interfaces.Sprint5;
 
 namespace Tyuiu.KochetovAP.Sprint5.Task7.V11.Lib
@@ -9,32 +8,30 @@ namespace Tyuiu.KochetovAP.Sprint5.Task7.V11.Lib
     {
         public string LoadDataAndSave(string path)
         {
-            if (!File.Exists(path))
-            {
-                throw new FileNotFoundException($"Файл не найден по пути: {path}");
-            }
+            string outputFile = @"C:\Users\Asus\DataSprint5\OutPutDataFileTask7V11.txt";
 
-            string fileContent = File.ReadAllText(path, Encoding.UTF8);
-            string processedContent = RemoveSpacesAndLowercaseRussianLetters(fileContent);
+            string content = File.ReadAllText(path, Encoding.UTF8);
+            string processedContent = ProcessContent(content);
 
-            string outputPath = Path.Combine(Path.GetTempPath(), $"OutPutDataFileTask7V11_{Guid.NewGuid()}.txt");
+            File.WriteAllText(outputFile, processedContent, Encoding.UTF8);
 
-            File.WriteAllText(outputPath, processedContent, Encoding.UTF8);
-            return outputPath;
+            return outputFile;
         }
 
-        private string RemoveSpacesAndLowercaseRussianLetters(string text)
+        private string ProcessContent(string content)
         {
-            string withoutLowercase = Regex.Replace(text, "[а-я]", "");
+            StringBuilder result = new StringBuilder();
 
-            string withoutSpaces = withoutLowercase.Replace(" ", "");
+            foreach (char c in content)
+            {
+                if (c == ' ') continue;                   
+                if (c >= 'а' && c <= 'я') continue;        
+                if (c == 'ё') continue;                    
 
+                result.Append(c);                          
+            }
 
-
-            string result = withoutSpaces
-                .Replace("П,?О.О.", "П,? О. О .");
-
-            return result;
+            return result.ToString();
         }
     }
 }
