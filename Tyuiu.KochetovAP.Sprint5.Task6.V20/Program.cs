@@ -24,7 +24,7 @@ namespace Tyuiu.KochetovAP.Sprint5.Task6.V20
             Console.WriteLine("* ИСХОДНЫЕ ДАННЫЕ:                                                        *");
             Console.WriteLine("***************************************************************************");
 
-            string path = @"C:\DataSprint5\InPutDataFileTask6V20.txt";
+            string path = @"C:\Users\Asus\DataSprint5\InPutDataFileTask6V20.txt";
             Console.WriteLine("Данные находятся в файле: " + path);
 
             Console.WriteLine("***************************************************************************");

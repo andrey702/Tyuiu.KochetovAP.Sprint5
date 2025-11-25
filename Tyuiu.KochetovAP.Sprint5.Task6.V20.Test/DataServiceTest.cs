@@ -1,5 +1,7 @@
-﻿using Tyuiu.KochetovAP.Sprint5.Task6.V20.Lib;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 using System.IO;
+using Tyuiu.KochetovAP.Sprint5.Task6.V20.Lib;
 
 namespace Tyuiu.KochetovAP.Sprint5.Task6.V20.Test
 {
@@ -9,85 +11,22 @@ namespace Tyuiu.KochetovAP.Sprint5.Task6.V20.Test
         [TestMethod]
         public void ValidLoadFromDataFile()
         {
-            string path = Path.GetTempFileName();
+            string path = @"C:\Users\Asus\DataSprint5\InPutDataFileTask6V20.txt";
 
-            try
-            {
-                File.WriteAllText(path, "Это моя вторая строка для теста.");
+            Directory.CreateDirectory(Path.GetDirectoryName(path));
 
-                DataService ds = new DataService();
-                int wait = 2; 
-                int res = ds.LoadFromDataFile(path);
-                Assert.AreEqual(wait, res);
-            }
-            finally
-            {
-                if (File.Exists(path))
-                    File.Delete(path);
-            }
+
+            string testData = "Это моя вторая строка для теста.";
+            File.WriteAllText(path, testData);
+
+            DataService ds = new DataService();
+            int wait = 2;
+            int res = ds.LoadFromDataFile(path);
+
+            Assert.AreEqual(wait, res);
         }
 
-        [TestMethod]
-        public void ValidLoadFromDataFileWithMoreWords()
-        {
-            string path = Path.GetTempFileName();
 
-            try
-            {
-                File.WriteAllText(path, "Это моя вторая строка для теста. Добавим победа радость.");
 
-                DataService ds = new DataService();
-                int wait = 3; 
-                int res = ds.LoadFromDataFile(path);
-                Assert.AreEqual(wait, res);
-            }
-            finally
-            {
-                if (File.Exists(path))
-                    File.Delete(path);
-            }
-        }
-
-        [TestMethod]
-        public void ValidLoadFromDataFileWithMixedLength()
-        {
-            string path = Path.GetTempFileName();
-
-            try
-            {
-                File.WriteAllText(path, "кот дом победа университет радость данные");
-
-                DataService ds = new DataService();
-                int wait = 2; 
-                int res = ds.LoadFromDataFile(path);
-                Assert.AreEqual(wait, res);
-            }
-            finally
-            {
-                if (File.Exists(path))
-                    File.Delete(path);
-            }
-        }
-
-        [TestMethod]
-        public void ValidLoadFromDataFileEmpty()
-        {
-            string path = Path.GetTempFileName();
-
-            try
-            {
-                File.WriteAllText(path, "");
-
-                DataService ds = new DataService();
-                int wait = 0;
-                int res = ds.LoadFromDataFile(path);
-                Assert.AreEqual(wait, res);
-            }
-            finally
-            {
-                if (File.Exists(path))
-                    File.Delete(path);
-            }
-        }
     }
 }

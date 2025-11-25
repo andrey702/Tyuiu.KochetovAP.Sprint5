@@ -1,4 +1,7 @@
-﻿using System.Text.RegularExpressions;
+﻿
+
+using System.IO;
+using System.Text.RegularExpressions;
 using tyuiu.cources.programming.interfaces.Sprint5;
 
 namespace Tyuiu.KochetovAP.Sprint5.Task6.V20.Lib
@@ -7,10 +10,17 @@ namespace Tyuiu.KochetovAP.Sprint5.Task6.V20.Lib
     {
         public int LoadFromDataFile(string path)
         {
-            string content = File.ReadAllText(path);
+            if (!File.Exists(path))
+            {
+                throw new FileNotFoundException($"Файл не найден: {path}");
+            }
 
-            Regex regex = new Regex(@"\b[а-яёА-ЯЁ]{6}\b");
-            return regex.Matches(content).Count;
+            string text = File.ReadAllText(path);
+
+            string pattern = @"\b[a-zA-Zа-яА-Я]{6}\b";
+            MatchCollection matches = Regex.Matches(text, pattern);
+
+            return matches.Count;
         }
     }
 }
