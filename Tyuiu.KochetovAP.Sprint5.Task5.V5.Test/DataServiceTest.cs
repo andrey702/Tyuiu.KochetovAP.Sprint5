@@ -8,34 +8,45 @@ namespace Tyuiu.KochetovAP.Sprint5.Task5.V5.Test
     {
         public static void RunTests()
         {
-            Console.WriteLine("Запуск тестов...");
+            Console.WriteLine("=== ТЕСТИРОВАНИЕ DATA SERVICE ===");
+            Console.WriteLine();
 
             TestValidLoadFromDataFile();
-            TestValidWithPointDecimal();
+            TestValidWithPathCombine();
+            TestValidWithTempFileName();
             TestFileNotFound();
             TestNoIntegers();
+            TestCreateTestFileInYourDirectory();
+            TestCreateTempTestFile();
 
-            Console.WriteLine("Все тесты завершены!");
+            Console.WriteLine();
+            Console.WriteLine("=== ТЕСТИРОВАНИЕ ЗАВЕРШЕНО ===");
         }
 
-        public static void TestValidLoadFromDataFile()
+        static void TestValidLoadFromDataFile()
         {
             try
             {
                 DataService ds = new DataService();
-                string path = @"C:\Users\Asus\DataSprint5\InPutDataFileTask5V5.txt";
 
-                double res = ds.LoadFromDataFile(path);
-                double wait = 30;
+                
+                string yourDir = @"C:\Users\Asus\DataSprint5";
+                string fileName = "InPutDataFileTask5V5.txt";
+                string path = Path.Combine(yourDir, fileName);
 
-                if (Math.Abs(res - wait) < 0.001)
+                
+                if (!File.Exists(path))
                 {
+                    Directory.CreateDirectory(yourDir);
+                    File.WriteAllText(path, "-3.09 3 3 7.48 -3.22 17.29 8 -4 0.83 14.18 -6 8.15 -8.7 -3.06 20 -4 15.82 -10 9 -3");
+                }
+
+                double result = ds.LoadFromDataFile(path);
+
+                if (Math.Abs(result - 30) < 0.001)
                     Console.WriteLine("✓ TestValidLoadFromDataFile: ПРОЙДЕН");
-                }
                 else
-                {
-                    Console.WriteLine($"✗ TestValidLoadFromDataFile: ОШИБКА. Ожидалось {wait}, получено {res}");
-                }
+                    Console.WriteLine($"✗ TestValidLoadFromDataFile: ОШИБКА. Ожидалось 30, получено {result}");
             }
             catch (Exception ex)
             {
@@ -43,45 +54,69 @@ namespace Tyuiu.KochetovAP.Sprint5.Task5.V5.Test
             }
         }
 
-        public static void TestValidWithPointDecimal()
+        static void TestValidWithPathCombine()
         {
             try
             {
                 DataService ds = new DataService();
-                string testFilePath = @"C:\Users\Asus\DataSprint5\TestFile1.txt";
 
-                string testData = "3.09 3 3 7.48 -3.22 8 -4 0.83 -6 20 -4 -10 9 -3";
-                File.WriteAllText(testFilePath, testData);
+                
+                string yourDir = @"C:\Users\Asus\DataSprint5";
+                string fileName = "TestCalculation.txt";
+                string filePath = Path.Combine(yourDir, fileName);
 
-                double result = ds.LoadFromDataFile(testFilePath);
-                double expected = 30;
+                File.WriteAllText(filePath, "5 -2 10 3.14 8 -7 15");
+                double result = ds.LoadFromDataFile(filePath);
 
-                if (Math.Abs(result - expected) < 0.001)
-                {
-                    Console.WriteLine("✓ TestValidWithPointDecimal: ПРОЙДЕН");
-                }
+                if (Math.Abs(result - 17) < 0.001)
+                    Console.WriteLine("✓ TestValidWithPathCombine: ПРОЙДЕН");
                 else
-                {
-                    Console.WriteLine($"✗ TestValidWithPointDecimal: ОШИБКА. Ожидалось {expected}, получено {result}");
-                }
+                    Console.WriteLine($"✗ TestValidWithPathCombine: ОШИБКА. Ожидалось 17, получено {result}");
 
-                File.Delete(testFilePath);
+                File.Delete(filePath);
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"✗ TestValidWithPointDecimal: ОШИБКА - {ex.Message}");
+                Console.WriteLine($"✗ TestValidWithPathCombine: ОШИБКА - {ex.Message}");
             }
         }
 
-        public static void TestFileNotFound()
+        static void TestValidWithTempFileName()
         {
             try
             {
                 DataService ds = new DataService();
-                string path = @"C:\Users\Asus\DataSprint5\NonExistentFile.txt";
 
-                ds.LoadFromDataFile(path);
-                Console.WriteLine("✗ TestFileNotFound: ОШИБКА - Ожидалось исключение");
+                
+                string tempFile = Path.GetTempFileName();
+                File.WriteAllText(tempFile, "3 8 -4 20 -10 9 -3");
+
+                double result = ds.LoadFromDataFile(tempFile);
+
+                if (Math.Abs(result - 30) < 0.001)
+                    Console.WriteLine("✓ TestValidWithTempFileName: ПРОЙДЕН");
+                else
+                    Console.WriteLine($"✗ TestValidWithTempFileName: ОШИБКА. Ожидалось 30, получено {result}");
+
+                File.Delete(tempFile);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"✗ TestValidWithTempFileName: ОШИБКА - {ex.Message}");
+            }
+        }
+
+        static void TestFileNotFound()
+        {
+            try
+            {
+                DataService ds = new DataService();
+
+                string yourDir = @"C:\Users\Asus\DataSprint5";
+                string nonExistentFile = Path.Combine(yourDir, "NonExistentFile.txt");
+
+                ds.LoadFromDataFile(nonExistentFile);
+                Console.WriteLine("✗ TestFileNotFound: ОШИБКА - Ожидалось исключение FileNotFoundException");
             }
             catch (FileNotFoundException)
             {
@@ -93,20 +128,19 @@ namespace Tyuiu.KochetovAP.Sprint5.Task5.V5.Test
             }
         }
 
-        public static void TestNoIntegers()
+        static void TestNoIntegers()
         {
             try
             {
                 DataService ds = new DataService();
-                string testFilePath = @"C:\Users\Asus\DataSprint5\TestFile2.txt";
 
-                string testData = "3.14 2.71 0.83 1.41";
-                File.WriteAllText(testFilePath, testData);
+                string tempFile = Path.GetTempFileName();
+                File.WriteAllText(tempFile, "3.14 2.71 1.41 0.83");
 
-                ds.LoadFromDataFile(testFilePath);
+                ds.LoadFromDataFile(tempFile);
                 Console.WriteLine("✗ TestNoIntegers: ОШИБКА - Ожидалось исключение");
 
-                File.Delete(testFilePath);
+                File.Delete(tempFile);
             }
             catch (ArgumentException ex) when (ex.Message.Contains("нет целых чисел"))
             {
@@ -115,6 +149,66 @@ namespace Tyuiu.KochetovAP.Sprint5.Task5.V5.Test
             catch (Exception ex)
             {
                 Console.WriteLine($"✗ TestNoIntegers: ОШИБКА - {ex.Message}");
+            }
+        }
+
+        static void TestCreateTestFileInYourDirectory()
+        {
+            try
+            {
+                DataService ds = new DataService();
+
+                string filePath = ds.CreateTestFileInYourDirectory();
+
+                if (File.Exists(filePath))
+                {
+                    double result = ds.LoadFromDataFile(filePath);
+
+                    if (Math.Abs(result - 30) < 0.001)
+                        Console.WriteLine("✓ TestCreateTestFileInYourDirectory: ПРОЙДЕН");
+                    else
+                        Console.WriteLine($"✗ TestCreateTestFileInYourDirectory: ОШИБКА. Ожидалось 30, получено {result}");
+
+                    File.Delete(filePath);
+                }
+                else
+                {
+                    Console.WriteLine("✗ TestCreateTestFileInYourDirectory: ОШИБКА - Файл не создан");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"✗ TestCreateTestFileInYourDirectory: ОШИБКА - {ex.Message}");
+            }
+        }
+
+        static void TestCreateTempTestFile()
+        {
+            try
+            {
+                DataService ds = new DataService();
+
+                string tempFilePath = ds.CreateTempTestFile();
+
+                if (File.Exists(tempFilePath))
+                {
+                    double result = ds.LoadFromDataFile(tempFilePath);
+
+                    if (Math.Abs(result - 17) < 0.001)
+                        Console.WriteLine("✓ TestCreateTempTestFile: ПРОЙДЕН");
+                    else
+                        Console.WriteLine($"✗ TestCreateTempTestFile: ОШИБКА. Ожидалось 17, получено {result}");
+
+                    File.Delete(tempFilePath);
+                }
+                else
+                {
+                    Console.WriteLine("✗ TestCreateTempTestFile: ОШИБКА - Файл не создан");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"✗ TestCreateTempTestFile: ОШИБКА - {ex.Message}");
             }
         }
     }
