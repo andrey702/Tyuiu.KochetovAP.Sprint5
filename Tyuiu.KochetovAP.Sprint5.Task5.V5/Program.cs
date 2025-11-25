@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using Tyuiu.KochetovAP.Sprint5.Task5.V5.Lib;
+using Tyuiu.KochetovAP.Sprint5.Task5.V5.Test;
 
 namespace Tyuiu.KochetovAP.Sprint5.Task5.V5
 {
@@ -26,7 +27,7 @@ namespace Tyuiu.KochetovAP.Sprint5.Task5.V5
             Console.WriteLine("* ИСХОДНЫЕ ДАННЫЕ:                                                        *");
             Console.WriteLine("***************************************************************************");
 
- 
+
             string yourDir = @"C:\Users\Asus\DataSprint5";
             string fileName = "InPutDataFileTask5V5.txt";
             string path = Path.Combine(yourDir, fileName);
@@ -36,7 +37,7 @@ namespace Tyuiu.KochetovAP.Sprint5.Task5.V5
 
             if (!File.Exists(path))
             {
-                Directory.CreateDirectory(yourDir); 
+                Directory.CreateDirectory(yourDir);
                 File.WriteAllText(path, "-3.09 3 3 7.48 -3.22 17.29 8 -4 0.83 14.18 -6 8.15 -8.7 -3.06 20 -4 15.82 -10 9 -3");
                 Console.WriteLine("Файл создан автоматически");
             }
@@ -65,6 +66,14 @@ namespace Tyuiu.KochetovAP.Sprint5.Task5.V5
             {
                 Console.WriteLine($"Ошибка! {ex.Message}");
             }
+
+            Console.WriteLine();
+            Console.WriteLine("***************************************************************************");
+            Console.WriteLine("* ЗАПУСК ТЕСТОВ:                                                          *");
+            Console.WriteLine("***************************************************************************");
+
+            DataServiceTest test = new DataServiceTest();
+            test.RunAllTests();
 
             Console.ReadKey();
         }
