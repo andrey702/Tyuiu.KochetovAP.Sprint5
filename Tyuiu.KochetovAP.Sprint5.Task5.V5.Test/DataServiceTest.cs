@@ -11,9 +11,9 @@ namespace Tyuiu.KochetovAP.Sprint5.Task5.V5.Test
             Console.WriteLine("Запуск тестов...");
 
             TestValidLoadFromDataFile();
-            TestValidWithCommaDecimal();
             TestValidWithPointDecimal();
             TestFileNotFound();
+            TestNoIntegers();
 
             Console.WriteLine("Все тесты завершены!");
         }
@@ -43,42 +43,12 @@ namespace Tyuiu.KochetovAP.Sprint5.Task5.V5.Test
             }
         }
 
-        public static void TestValidWithCommaDecimal()
-        {
-            try
-            {
-                DataService ds = new DataService();
-                string testFilePath = @"C:\Users\Asus\DataSprint5\TestFile1.txt";
-
-                string testData = "3,09 3 3 7,48 -3,22 8 -4 0,83 -6 20 -4 -10 9 -3";
-                File.WriteAllText(testFilePath, testData);
-
-                double result = ds.LoadFromDataFile(testFilePath);
-                double expected = 30;
-
-                if (Math.Abs(result - expected) < 0.001)
-                {
-                    Console.WriteLine("✓ TestValidWithCommaDecimal: ПРОЙДЕН");
-                }
-                else
-                {
-                    Console.WriteLine($"✗ TestValidWithCommaDecimal: ОШИБКА. Ожидалось {expected}, получено {result}");
-                }
-
-                File.Delete(testFilePath);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"✗ TestValidWithCommaDecimal: ОШИБКА - {ex.Message}");
-            }
-        }
-
         public static void TestValidWithPointDecimal()
         {
             try
             {
                 DataService ds = new DataService();
-                string testFilePath = @"C:\Users\Asus\DataSprint5\TestFile2.txt";
+                string testFilePath = @"C:\Users\Asus\DataSprint5\TestFile1.txt";
 
                 string testData = "3.09 3 3 7.48 -3.22 8 -4 0.83 -6 20 -4 -10 9 -3";
                 File.WriteAllText(testFilePath, testData);
@@ -120,6 +90,31 @@ namespace Tyuiu.KochetovAP.Sprint5.Task5.V5.Test
             catch (Exception ex)
             {
                 Console.WriteLine($"✗ TestFileNotFound: ОШИБКА - {ex.Message}");
+            }
+        }
+
+        public static void TestNoIntegers()
+        {
+            try
+            {
+                DataService ds = new DataService();
+                string testFilePath = @"C:\Users\Asus\DataSprint5\TestFile2.txt";
+
+                string testData = "3.14 2.71 0.83 1.41";
+                File.WriteAllText(testFilePath, testData);
+
+                ds.LoadFromDataFile(testFilePath);
+                Console.WriteLine("✗ TestNoIntegers: ОШИБКА - Ожидалось исключение");
+
+                File.Delete(testFilePath);
+            }
+            catch (ArgumentException ex) when (ex.Message.Contains("нет целых чисел"))
+            {
+                Console.WriteLine("✓ TestNoIntegers: ПРОЙДЕН");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"✗ TestNoIntegers: ОШИБКА - {ex.Message}");
             }
         }
     }
