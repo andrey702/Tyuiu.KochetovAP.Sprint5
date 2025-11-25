@@ -17,7 +17,6 @@ namespace Tyuiu.KochetovAP.Sprint5.Task5.V5.Lib
 
             string fileContent = File.ReadAllText(path);
 
-
             fileContent = fileContent.Replace(',', '.');
 
             string[] numberStrings = fileContent
@@ -40,7 +39,6 @@ namespace Tyuiu.KochetovAP.Sprint5.Task5.V5.Lib
                 throw new ArgumentException("Файл пуст или не содержит корректных чисел");
             }
 
-    
             var integers = numbers
                 .Where(x => Math.Abs(x - Math.Truncate(x)) < 0.000001)
                 .ToList();
@@ -52,33 +50,35 @@ namespace Tyuiu.KochetovAP.Sprint5.Task5.V5.Lib
 
             double maxInteger = integers.Max();
             double minInteger = integers.Min();
-            double difference = maxInteger - minInteger;
-
-            return difference;
+            return maxInteger - minInteger;
         }
 
-   
-        public string CreateTestFileInYourDirectory()
+
+        public string CreateFileWithTempFileName()
         {
-            string yourDir = @"C:\Users\Asus\DataSprint5";
-            string fileName = "TestDataFile.txt";
-            string fullPath = Path.Combine(yourDir, fileName);
+            string tempFile = Path.GetTempFileName();
+            File.WriteAllText(tempFile, "10 5 -3 8 15 -7");
+            return tempFile;
+        }
 
-            string testData = "-3.09 3 3 7.48 -3.22 17.29 8 -4 0.83 14.18 -6 8.15 -8.7 -3.06 20 -4 15.82 -10 9 -3";
-            File.WriteAllText(fullPath, testData);
 
+        public string CreateFileWithCombine()
+        {
+            string tempDir = Path.GetTempPath();
+            string fileName = "CustomDataFile.txt";
+            string fullPath = Path.Combine(tempDir, fileName);
+            File.WriteAllText(fullPath, "3 8 -4 20 -10 9 -3");
             return fullPath;
         }
 
-       
-        public string CreateTempTestFile()
+
+        public string CreateFileInYourDirectory()
         {
-            string tempFilePath = Path.GetTempFileName();
-
-            string testData = "5 -2 10 3.14 8 -7 15";
-            File.WriteAllText(tempFilePath, testData);
-
-            return tempFilePath;
+            string yourDir = @"C:\Users\Asus\DataSprint5";
+            string fileName = "InPutDataFileTask5V5.txt";
+            string fullPath = Path.Combine(yourDir, fileName);
+            File.WriteAllText(fullPath, "-3.09 3 3 7.48 -3.22 17.29 8 -4 0.83 14.18 -6 8.15 -8.7 -3.06 20 -4 15.82 -10 9 -3");
+            return fullPath;
         }
     }
 }
